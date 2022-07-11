@@ -1,6 +1,6 @@
 using System;
 
-namespace SimplePostsFeed
+namespace SimplePostsFeed.Models
 {
     public class WeatherForecast
     {
