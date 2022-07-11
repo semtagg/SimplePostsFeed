@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SimplePostsFeed.Repository;
+using SimplePostsFeed.Services;
 using AppContext = SimplePostsFeed.Repository.AppContext;
 
 namespace SimplePostsFeed
@@ -30,6 +31,8 @@ namespace SimplePostsFeed
             services.AddDbContext<AppContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("AppContext")));
             services.AddTransient<IAppRepository, AppRepository>();
+            services.AddTransient<ITokenService, TokenService>();
+            //services.AddScoped<IAppRepository, AppRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

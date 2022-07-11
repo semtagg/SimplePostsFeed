@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -16,23 +17,34 @@ namespace SimplePostsFeed.Controllers
 
         public PostController(IAppRepository appRepository)
         {
-            _appRepository = appRepository;
+            _appRepository = appRepository ?? throw new ArgumentNullException(nameof(appRepository));
         }
 
+        //TODO: returns type should be postviewmodel
         [HttpGet]
-        public async Task<PostViewModelDto[]> GetAllPosts()
+        [ProducesResponseType(typeof(PostViewModelDto[]), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetAllPosts()
         {
-            return await _appRepository.GetAllPosts();
+            var result = await _appRepository.GetAllPosts();
+
+            return result == null
+                ? NotFound()
+                : Ok(result);
         }
-        
+
         [HttpGet("{id}")]
-        public async Task<PostViewModelDto[]> GetPostByUserId(int id)
+        [ProducesResponseType(typeof(PostViewModelDto[]), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetPostByUserId(int id)
         {
-            return await _appRepository.GetPostByUserId(id);
+            var result = await _appRepository.GetPostByUserId(id);
+
+            return result == null
+                ? NotFound()
+                : Ok(result);
         }
-        
+
         [HttpPost]
-        public async Task CreatePost(PostViewModel post)
+        public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
         {
             var tmp = new PostViewModelDto()
             {
@@ -40,14 +52,21 @@ namespace SimplePostsFeed.Controllers
                 Body = post.Body,
                 UserId = post.UserId
             };
-            
+
             await _appRepository.CreatePost(tmp);
+
+            return Ok();
         }
 
         [HttpDelete("{id}")]
-        public async Task<PostViewModelDto> DeletePost(int id)
+        [ProducesResponseType(typeof(PostViewModelDto), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> DeletePost(int id)
         {
-            return await _appRepository.Delete(id);
+            var result = await _appRepository.DeletePost(id);
+
+            return result == null
+                ? NotFound()
+                : Ok(result);
         }
     }
 }
