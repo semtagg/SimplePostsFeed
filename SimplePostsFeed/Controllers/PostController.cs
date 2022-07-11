@@ -32,12 +32,22 @@ namespace SimplePostsFeed.Controllers
         }
         
         [HttpPost]
-        public async Task CreatePost(PostViewModelDto post)
+        public async Task CreatePost(PostViewModel post)
         {
-            await _appRepository.CreatePost(post);
+            var tmp = new PostViewModelDto()
+            {
+                Title = post.Title,
+                Body = post.Body,
+                UserId = post.UserId
+            };
+            
+            await _appRepository.CreatePost(tmp);
         }
-        
-        [HttpDelete]
-        
+
+        [HttpDelete("{id}")]
+        public async Task<PostViewModelDto> DeletePost(int id)
+        {
+            return await _appRepository.Delete(id);
+        }
     }
 }
