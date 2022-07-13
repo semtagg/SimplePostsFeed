@@ -23,9 +23,25 @@ namespace SimplePostsFeed.Controllers
             _appRepository = appRepository ?? throw new ArgumentNullException(nameof(appRepository));
         }
 
+        [HttpPost("register")]
+        [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> Register([FromBody] AccountViewModel registerModel)
+        {
+            if (registerModel is null)
+            {
+                return BadRequest("Invalid client request");
+            }
+
+            var result = await _appRepository.Register(registerModel);
+
+            return result == null
+                ? Unauthorized()
+                : Ok(result);
+        }
+
         [HttpPost("login")]
         [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> Login([FromBody] AccountViewModelDto loginModel)
+        public async Task<IActionResult> Login([FromBody] AccountViewModel loginModel)
         {
             if (loginModel is null)
             {

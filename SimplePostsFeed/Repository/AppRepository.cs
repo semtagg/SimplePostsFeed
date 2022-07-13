@@ -1,5 +1,7 @@
 ﻿using System;
+using BCryptNet = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -21,10 +23,29 @@ namespace SimplePostsFeed.Repository
             _tokenService = tokenService;
         }
 
-        public async Task<AuthenticatedResponse> Login(AccountViewModelDto loginModel)
+        public async Task<AuthenticatedResponse> Register(AccountViewModel registerModel)
+        {
+            if (await _context.Accounts.AnyAsync(x => x.UserName == registerModel.UserName))
+                return null;
+            
+            var user = new AccountViewModelDto()
+            {
+                UserName = registerModel.UserName,
+                PasswordHash = BCryptNet.HashPassword(registerModel.Password),
+                RefreshToken = registerModel.RefreshToken,
+                RefreshTokenExpiryTime = registerModel.RefreshTokenExpiryTime
+            };
+            
+            await _context.Accounts.AddAsync(user);
+            await _context.SaveChangesAsync();
+
+            return await Login(registerModel);
+        }
+
+        public async Task<AuthenticatedResponse> Login(AccountViewModel loginModel)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(u =>
-                (u.UserName == loginModel.UserName) && (u.Password == loginModel.Password));
+                (u.UserName == loginModel.UserName) && (u.PasswordHash == BCryptNet.HashPassword(loginModel.Password)));
 
             if (user is null)
                 return null;

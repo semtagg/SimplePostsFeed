@@ -6,7 +6,8 @@ namespace SimplePostsFeed.Repository
 {
     public interface IAppRepository
     {
-        Task<AuthenticatedResponse> Login(AccountViewModelDto loginModel);
+        Task<AuthenticatedResponse> Register(AccountViewModel registerModel);
+        Task<AuthenticatedResponse> Login(AccountViewModel loginModel);
         Task<AuthenticatedResponse> Refresh(TokenApiModel tokenApiModel);
         Task Revoke(string userName);
         Task<PostViewModelDto[]> GetAllPosts();
