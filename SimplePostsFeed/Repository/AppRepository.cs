@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SimplePostsFeed.Models;
@@ -27,15 +29,16 @@ namespace SimplePostsFeed.Repository
         {
             if (await _context.Accounts.AnyAsync(x => x.UserName == registerModel.UserName))
                 return null;
-            
+
+            var bytes = ASCIIEncoding.ASCII.GetBytes(registerModel.Password);
             var user = new AccountViewModelDto()
             {
                 UserName = registerModel.UserName,
-                PasswordHash = BCryptNet.HashPassword(registerModel.Password),
+                PasswordHash = new MD5CryptoServiceProvider().ComputeHash(bytes),
                 RefreshToken = registerModel.RefreshToken,
                 RefreshTokenExpiryTime = registerModel.RefreshTokenExpiryTime
             };
-            
+
             await _context.Accounts.AddAsync(user);
             await _context.SaveChangesAsync();
 
@@ -45,7 +48,8 @@ namespace SimplePostsFeed.Repository
         public async Task<AuthenticatedResponse> Login(AccountViewModel loginModel)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(u =>
-                (u.UserName == loginModel.UserName) && (u.PasswordHash == BCryptNet.HashPassword(loginModel.Password)));
+                (u.UserName == loginModel.UserName) && (u.PasswordHash.SequenceEqual(new MD5CryptoServiceProvider()
+                    .ComputeHash(ASCIIEncoding.ASCII.GetBytes(loginModel.Password)))));
 
             if (user is null)
                 return null;
@@ -73,17 +77,17 @@ namespace SimplePostsFeed.Repository
         {
             string accessToken = tokenApiModel.AccessToken;
             string refreshToken = tokenApiModel.RefreshToken;
-            
+
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name; //this is mapped to the Name claim by default
             var user = await _context.Accounts.SingleOrDefaultAsync(u => u.UserName == username);
-            
+
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return null;
-            
+
             var newAccessToken = _tokenService.GenerateAccessToken(principal.Claims);
             var newRefreshToken = _tokenService.GenerateRefreshToken();
-            
+
             user.RefreshToken = newRefreshToken;
             await _context.SaveChangesAsync();
 

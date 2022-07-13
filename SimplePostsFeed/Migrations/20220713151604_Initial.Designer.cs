@@ -11,7 +11,7 @@ using AppContext = SimplePostsFeed.Repository.AppContext;
 namespace SimplePostsFeed.Migrations
 {
     [DbContext(typeof(AppContext))]
-    [Migration("20220713143236_Initial")]
+    [Migration("20220713151604_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,8 +29,8 @@ namespace SimplePostsFeed.Migrations
                         .HasColumnType("bigint")
                         .UseIdentityColumn();
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<byte[]>("PasswordHash")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
