@@ -56,8 +56,8 @@ namespace SimplePostsFeed.Repository
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, loginModel.UserName),
-                new Claim(ClaimTypes.Role, "Manager")
+                new Claim("_id", user.Id.ToString()),
+                new Claim("_name", loginModel.UserName)
             };
 
             var accessToken = _tokenService.GenerateAccessToken(claims);
