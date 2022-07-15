@@ -12,9 +12,9 @@
  * Do not edit the file manually.
  */
 
-import * as url from "url";
 import * as isomorphicFetch from "isomorphic-fetch";
 import { Configuration } from "./configuration";
+import * as url from "url";
 
 const BASE_PATH = "/".replace(/\/+$/, "");
 

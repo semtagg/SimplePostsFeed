@@ -33,6 +33,16 @@ namespace SimplePostsFeed
             services.AddTransient<IAppRepository, AppRepository>();
             services.AddTransient<ITokenService, TokenService>();
             //services.AddScoped<IAppRepository, AppRepository>();
+            services.AddCors(options =>
+            {
+                options.AddDefaultPolicy(
+                    builder =>
+                    {
+                        builder.WithOrigins("https://localhost:3000")
+                            .AllowAnyHeader()
+                            .AllowAnyMethod();
+                    });
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,6 +54,14 @@ namespace SimplePostsFeed
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "SimplePostsFeed v1"));
             }
+
+            app.UseCors(builder =>
+            {
+                builder
+                    .AllowAnyOrigin()
+                    .AllowAnyMethod()
+                    .AllowAnyHeader();
+            });
 
             app.UseHttpsRedirection();
 

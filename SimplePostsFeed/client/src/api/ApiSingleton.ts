@@ -4,7 +4,6 @@ import AuthService from "../services/AuthService";
 
 
 class Api {
-    auth = new AuthService() // ?
     readonly authApi: AuthApi;
     readonly postApi: PostApi;
     readonly authService: AuthService;
@@ -20,13 +19,13 @@ class Api {
     }
 }
 
-const basePath = "http://localhost:3000";
+const basePath = "http://localhost:5000";
 const authService = new AuthService();
 let ApiSingleton: Api;
 
 ApiSingleton = new Api(
-    new AuthApi({ basePath: basePath, apiKey: () => "Bearer " + authService.getToken()! }),
-    new PostApi({ basePath: basePath, apiKey: () => "Bearer " + authService.getToken()! }),
+    new AuthApi({ basePath: basePath, apiKey: () => "Bearer " + authService.getAccessToken() }),
+    new PostApi({ basePath: basePath, apiKey: () => "Bearer " + authService.getAccessToken() }),
     authService
 );
 

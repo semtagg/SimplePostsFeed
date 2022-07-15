@@ -2,18 +2,26 @@ import React, {useEffect, useState} from 'react';
 import logo from './logo.svg';
 import './App.css';
 import {Routes, Route, Link, useNavigate} from "react-router-dom";
+import ApiSingleton from "./api/ApiSingleton";
+import Login from "./components/Login";
+
+interface TokenPayload {
+  _id: string;
+  _name: string;
+  exp: number;
+  iss: string;
+  aud: string;
+}
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(undefined);
+  const [currentUser, setCurrentUser] = useState<TokenPayload>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = AuthService.getCurrentUser();
+    const user = ApiSingleton.authService.getProfile();
 
     if (user) {
-      const unixNow = Math.floor(new Date().getTime() / 1000);
-
-      if (user.exp < unixNow)
+      if (!ApiSingleton.authService.isLoggedIn())
       {
         logOut();
         navigate("/login");
@@ -25,7 +33,7 @@ function App() {
   }, [navigate]);
 
   const logOut = () => {
-    AuthService.logout();
+    ApiSingleton.authService.logout();
   };
 
   return (
@@ -41,12 +49,12 @@ function App() {
             {currentUser && (
                 <>
                   <li className="nav-item">
-                    <Link to={"/getPostsById/" + currentUser.user_id.rows[0].id} className="nav-link">
+                    <Link to={"/getPostsById/" + currentUser._id} className="nav-link">
                       MyPosts
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/createPost/" + currentUser.user_id.rows[0].id} className="nav-link">
+                    <Link to={"/createPost/" + currentUser._id} className="nav-link">
                       CreatePost
                     </Link>
                   </li>
@@ -84,9 +92,9 @@ function App() {
             {/*<Route path="/" element={<Home/>}/>*/}
             {/*<Route path="/" element={<AllPosts/>}/>
             <Route path="/getPostsById/:id" element={<CurrentUserPosts/>}/>
-            <Route path="/createPost/:id" element={<CreatePost/>}/>
+            <Route path="/createPost/:id" element={<CreatePost/>}/>*/}
             <Route path="/login" element={<Login/>}/>
-            <Route path="/register" element={<Register/>}/>*/}
+            {/*<Route path="/register" element={<Register/>}/>*/}
           </Routes>
         </div>
       </div>

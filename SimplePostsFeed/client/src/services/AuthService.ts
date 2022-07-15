@@ -1,17 +1,16 @@
-import {AuthApi, AccountViewModel} from '../api/api';
+import {AuthApi, AccountViewModel, TokenApiModel} from '../api/api';
 import ApiSingleton from "../api/ApiSingleton";
 import decode from "jwt-decode";
 
 interface TokenPayload {
-    _userName: string;
     _id: string;
-    nbf: number;
+    _name: string;
     exp: number;
     iss: string;
+    aud: string;
 }
 
 export default class AuthService {
-    client = new AuthApi();
 
     constructor() {
         this.login = this.login.bind(this);
@@ -20,51 +19,57 @@ export default class AuthService {
 
     async login(user: AccountViewModel) {
         const response = await ApiSingleton.authApi.apiAuthLoginPost(user)
-        if (token.) {
+        if (response.token == null) {
             return {
-                error: token.errors,
+                error: "error",
                 isLogin: false
             }
         }
-        this.setToken(token.value?.accessToken!)
+        this.setAccessToken(response.token)
         return {
             error: null,
             isLogin: true
         }
     }
 
-    async loginByGoogle(tokenId: string) {
-        const token = await ApiSingleton.accountApi.apiAccountGooglePost(tokenId)
-        if (token.errors) {
+    async register(user: AccountViewModel) {
+        const response = await ApiSingleton.authApi.apiAuthRegisterPost(user)
+        if (response.token == null) {
             return {
-                error: token.errors,
+                error: "error",
                 isLogin: false
             }
         }
-        this.setToken(token.value?.accessToken!)
+        this.setAccessToken(response.token)
         return {
             error: null,
             isLogin: true
         }
     }
 
-    async register(user: RegisterViewModel) {
-        const token = await ApiSingleton.accountApi.apiAccountRegisterPost(user)
-        if (!token.succeeded) {
+    async refresh() {
+        const data = {
+            accessToken: this.getAccessToken(),
+            refreshToken: this.getRefreshToken(),
+        } as TokenApiModel;
+
+        const response = await ApiSingleton.authApi.apiAuthRefreshPost(data);
+
+        if (response.token == null) {
             return {
-                loggedIn: false,
-                error: token.errors
+                error: "error",
+                isLogin: false
             }
         }
-        this.setToken(token.value?.accessToken!)
+        this.setAccessToken(response.token)
         return {
-            loggedIn: true,
-            error: []
+            error: null,
+            isLogin: true
         }
     }
 
     isLoggedIn() {
-        const token = this.getToken();
+        const token = this.getAccessToken();
         return !!token && !this.isTokenExpired(token);
     }
 
@@ -73,34 +78,27 @@ export default class AuthService {
             let decoded = decode(token);
             return (decoded as any).exp + 300 < Date.now() / 1000;
         } catch (err) {
-
             return false;
         }
     }
 
-    setToken = (idToken: string) => localStorage.setItem("id_token", idToken);
+    setAccessToken = (idToken: string) => localStorage.setItem("accessToken", idToken);
 
-    getToken = () => localStorage.getItem("id_token");
+    setRefreshToken = (idToken: string) => localStorage.setItem("refreshToken", idToken);
 
-    logout = () => localStorage.removeItem("id_token");
+    getAccessToken = () => localStorage.getItem("accessToken");
 
-    getProfile = () => decode<TokenPayload>(this.getToken() as string);
+    getRefreshToken = () => localStorage.getItem("refreshToken");
 
-    getUserId = () => this.getProfile()._id;
+    logout = () => localStorage.removeItem("accessToken");
 
-    loggedIn = () => this.getToken() !== null
+    getProfile = () => {
+        const token = this.getAccessToken();
 
-    getUserEmail = () => {
-        if (this.getToken() === null) {
-            return ""
-        }
-        return this.getProfile()["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress"]
-    }
+        return token === null ?  null : decode<TokenPayload>(token);
+    };
 
-    isLecturer() {
-        if (this.getToken() === null) {
-            return false
-        }
-        return this.getProfile()["http://schemas.microsoft.com/ws/2008/06/identity/claims/role"] === "Lecturer"
-    }
+    getUserId = () => this.getProfile()?._id;
+
+    loggedIn = () => this.getAccessToken() !== null
 }
