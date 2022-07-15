@@ -75,6 +75,7 @@ namespace SimplePostsFeed.Controllers
         [Route("revoke")]
         public async Task<IActionResult> Revoke()
         {
+            // отладить
             var userName = User.Identity.Name;
             
             await _appRepository.Revoke(userName);
