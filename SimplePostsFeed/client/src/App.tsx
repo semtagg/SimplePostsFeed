@@ -4,6 +4,8 @@ import './App.css';
 import {Routes, Route, Link, useNavigate} from "react-router-dom";
 import ApiSingleton from "./api/ApiSingleton";
 import Login from "./components/Login";
+import Register from "./components/Register";
+import AllPosts from "./components/AllPosts";
 
 interface TokenPayload {
   _id: string;
@@ -90,11 +92,11 @@ function App() {
         <div className="container mt-3">
           <Routes>
             {/*<Route path="/" element={<Home/>}/>*/}
-            {/*<Route path="/" element={<AllPosts/>}/>
-            <Route path="/getPostsById/:id" element={<CurrentUserPosts/>}/>
+            <Route path="/" element={<AllPosts/>}/>
+            {/*<Route path="/getPostsById/:id" element={<CurrentUserPosts/>}/>
             <Route path="/createPost/:id" element={<CreatePost/>}/>*/}
             <Route path="/login" element={<Login/>}/>
-            {/*<Route path="/register" element={<Register/>}/>*/}
+            <Route path="/register" element={<Register/>}/>
           </Routes>
         </div>
       </div>
