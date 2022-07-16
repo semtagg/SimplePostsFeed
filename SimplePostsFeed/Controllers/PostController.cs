@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SimplePostsFeed.Models;
@@ -46,6 +47,8 @@ namespace SimplePostsFeed.Controllers
         [HttpPost]
         public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
         {
+            var first = HttpContext.User.Claims;
+            var second = Request;
             var tmp = new PostViewModelDto()
             {
                 Title = post.Title,
