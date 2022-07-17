@@ -21,9 +21,8 @@ namespace SimplePostsFeed.Controllers
             _appRepository = appRepository ?? throw new ArgumentNullException(nameof(appRepository));
         }
 
-        //TODO: returns type should be postviewmodel
         [HttpGet]
-        [ProducesResponseType(typeof(PostViewModelDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PostViewModel[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllPosts()
         {
             var result = await _appRepository.GetAllPosts();
@@ -34,7 +33,7 @@ namespace SimplePostsFeed.Controllers
         }
 
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(PostViewModelDto[]), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(PostViewModel[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPostByUserId(int id)
         {
             var result = await _appRepository.GetPostByUserId(id);
@@ -45,17 +44,10 @@ namespace SimplePostsFeed.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
         {
-            var tmp = new PostViewModelDto()
-            {
-                Title = post.Title,
-                Body = post.Body,
-                UserId = post.UserId
-            };
-
-            await _appRepository.CreatePost(tmp);
+            var token = Request.Headers["Authorization"].ToString();
+            await _appRepository.CreatePost(post, token);
 
             return Ok();
         }

@@ -67,6 +67,7 @@ namespace SimplePostsFeed
                 options.UseSqlServer(Configuration.GetConnectionString("AppContext")));
             services.AddTransient<IAppRepository, AppRepository>();
             services.AddTransient<ITokenService, TokenService>();
+            services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             services.AddCors(options =>
             {
                 options.AddDefaultPolicy(

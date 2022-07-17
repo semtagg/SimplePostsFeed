@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
@@ -106,30 +107,52 @@ namespace SimplePostsFeed.Repository
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PostViewModelDto[]> GetAllPosts()
+        public async Task<PostViewModel[]> GetAllPosts()
         {
-            return await _context.Posts.ToArrayAsync();
+            var users = await _context.Accounts.ToArrayAsync();
+            var data = await _context.Posts.ToArrayAsync();
+
+            return data.Select(d => new PostViewModel()
+            {
+                Title = d.Title,
+                Body = d.Body,
+                NickName = users.FirstOrDefault(u => u.Id == d.UserId)?.UserName
+            }).ToArray();
         }
 
-        public async Task<PostViewModelDto[]> GetPostByUserId(int userId)
+        public async Task<PostViewModel[]> GetPostByUserId(int userId)
         {
-            return await _context.Posts
+            var user = await _context.Accounts
+                .FirstOrDefaultAsync(a => a.Id == userId);
+
+            var data = await _context.Posts
                 .Where(p => p.UserId == userId)
                 .ToArrayAsync();
+
+            return data.Select(d => new PostViewModel()
+            {
+                Title = d.Title,
+                Body = d.Body,
+                NickName = user.UserName
+            }).ToArray();
         }
 
-        public async Task CreatePost(PostViewModelDto item)
+        public async Task CreatePost(PostViewModel post, string token)
         {
-            await _context.Posts.AddAsync(item);
+            // проверка на null
+            var tmp = _tokenService.GetPrincipalFromExpiredToken(token[7..]).Claims.ToArray()[0].Value; 
+            var postDto = _mapper.Map<PostViewModelDto>(post);
+            postDto.UserId = int.Parse(tmp);
+            await _context.Posts.AddAsync(postDto);
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdatePost(PostViewModelDto item)
+        public Task UpdatePost(PostViewModel item)
         {
             throw new System.NotImplementedException();
         }
 
-        public async Task<PostViewModelDto> DeletePost(int id)
+        public async Task<PostViewModel> DeletePost(int id)
         {
             var item = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
 
@@ -139,7 +162,7 @@ namespace SimplePostsFeed.Repository
                 await _context.SaveChangesAsync();
             }
 
-            return item;
+            return _mapper.Map<PostViewModel>(item);
         }
     }
 }

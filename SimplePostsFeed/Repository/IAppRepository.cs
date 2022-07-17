@@ -10,10 +10,10 @@ namespace SimplePostsFeed.Repository
         Task<AuthenticatedResponse> Login(AccountViewModel loginModel);
         Task<AuthenticatedResponse> Refresh(TokenApiModel tokenApiModel);
         Task Revoke(string userName);
-        Task<PostViewModelDto[]> GetAllPosts();
-        Task<PostViewModelDto[]> GetPostByUserId(int userId);
-        Task CreatePost(PostViewModelDto item);
-        Task UpdatePost(PostViewModelDto item);
-        Task<PostViewModelDto> DeletePost(int id);
+        Task<PostViewModel[]> GetAllPosts();
+        Task<PostViewModel[]> GetPostByUserId(int userId);
+        Task CreatePost(PostViewModel post, string token);
+        Task UpdatePost(PostViewModel item);
+        Task<PostViewModel> DeletePost(int id);
     }
 }
