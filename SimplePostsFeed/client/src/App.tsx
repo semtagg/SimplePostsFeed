@@ -93,7 +93,6 @@ function App() {
 
         <div className="container mt-3">
           <Routes>
-            {/*<Route path="/" element={<Home/>}/>*/}
             <Route path="/" element={<AllPosts/>}/>
             <Route path="/getPostsById/:id" element={<CurrentUserPosts/>}/>
             <Route path="/createPost/:id" element={<CreatePost/>}/>

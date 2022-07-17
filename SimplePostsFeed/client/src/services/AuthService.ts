@@ -19,13 +19,16 @@ export default class AuthService {
 
     async login(user: AccountViewModel) {
         const response = await ApiSingleton.authApi.apiAuthLoginPost(user)
-        if (response.token == null) {
+        if (response.token == null || response.refreshToken == null) {
             return {
                 error: "error",
                 isLogin: false
             }
         }
-        this.setAccessToken(response.token)
+
+        this.setAccessToken(response.token);
+        this.setRefreshToken(response.refreshToken);
+
         return {
             error: null,
             isLogin: true
@@ -34,13 +37,16 @@ export default class AuthService {
 
     async register(user: AccountViewModel) {
         const response = await ApiSingleton.authApi.apiAuthRegisterPost(user)
-        if (response.token == null) {
+        if (response.token == null || response.refreshToken == null) {
             return {
                 error: "error",
                 isLogin: false
             }
         }
-        this.setAccessToken(response.token)
+
+        this.setAccessToken(response.token);
+        this.setRefreshToken(response.refreshToken);
+
         return {
             error: null,
             isLogin: true
@@ -90,7 +96,11 @@ export default class AuthService {
 
     getRefreshToken = () => localStorage.getItem("refreshToken");
 
-    logout = () => localStorage.removeItem("accessToken");
+    async logout() {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        await ApiSingleton.authApi.apiAuthRevokePost();
+    };
 
     getProfile = () => {
         const token = this.getAccessToken();

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -71,15 +72,12 @@ namespace SimplePostsFeed.Controllers
         }
 
         [HttpPost]
-        [Authorize]
         [Route("revoke")]
         public async Task<IActionResult> Revoke()
         {
-            // отладить
-            var userName = User.Identity.Name;
-            
+            var userName = User.Claims.FirstOrDefault(c => c.Type == "_userName").Value;
             await _appRepository.Revoke(userName);
-            
+
             return Ok();
         }
     }

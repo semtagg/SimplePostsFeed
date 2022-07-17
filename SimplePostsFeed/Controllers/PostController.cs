@@ -48,10 +48,6 @@ namespace SimplePostsFeed.Controllers
         [Authorize]
         public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
         {
-            var first = HttpContext.User.Claims;
-            var second = Request;
-            var third = Response;
-            var third1 = ControllerContext;
             var tmp = new PostViewModelDto()
             {
                 Title = post.Title,

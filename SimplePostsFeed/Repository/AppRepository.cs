@@ -7,6 +7,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
@@ -18,11 +19,13 @@ namespace SimplePostsFeed.Repository
     {
         private readonly AppContext _context;
         private readonly ITokenService _tokenService;
+        private readonly IMapper _mapper;
 
-        public AppRepository(AppContext context, ITokenService tokenService)
+        public AppRepository(AppContext context, ITokenService tokenService, IMapper mapper)
         {
             _context = context;
             _tokenService = tokenService;
+            _mapper = mapper;
         }
 
         public async Task<AuthenticatedResponse> Register(AccountViewModel registerModel)
@@ -35,8 +38,6 @@ namespace SimplePostsFeed.Repository
             {
                 UserName = registerModel.UserName,
                 PasswordHash = new MD5CryptoServiceProvider().ComputeHash(bytes),
-                RefreshToken = registerModel.RefreshToken,
-                RefreshTokenExpiryTime = registerModel.RefreshTokenExpiryTime
             };
 
             await _context.Accounts.AddAsync(user);
@@ -57,7 +58,7 @@ namespace SimplePostsFeed.Repository
             var claims = new List<Claim>
             {
                 new Claim("_id", user.Id.ToString()),
-                new Claim("_name", loginModel.UserName)
+                new Claim("_userName", loginModel.UserName)
             };
 
             var accessToken = _tokenService.GenerateAccessToken(claims);
