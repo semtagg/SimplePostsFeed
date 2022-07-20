@@ -110,5 +110,7 @@ export default class AuthService {
 
     getUserId = () => this.getProfile()?._id;
 
+    getUserName = () => this.getProfile()?._name;
+
     loggedIn = () => this.getAccessToken() !== null
 }

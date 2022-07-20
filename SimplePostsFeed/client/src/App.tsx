@@ -53,12 +53,12 @@ function App() {
             {currentUser && (
                 <>
                   <li className="nav-item">
-                    <Link to={"/getPostsById/" + currentUser._id} className="nav-link">
+                    <Link to={"/getCurrentUserPosts"} className="nav-link">
                       MyPosts
                     </Link>
                   </li>
                   <li className="nav-item">
-                    <Link to={"/createPost/" + currentUser._id} className="nav-link">
+                    <Link to={"/createPost"} className="nav-link">
                       CreatePost
                     </Link>
                   </li>
@@ -94,8 +94,8 @@ function App() {
         <div className="container mt-3">
           <Routes>
             <Route path="/" element={<AllPosts/>}/>
-            <Route path="/getPostsById/:id" element={<CurrentUserPosts/>}/>
-            <Route path="/createPost/:id" element={<CreatePost/>}/>
+            <Route path="/getCurrentUserPosts" element={<CurrentUserPosts/>}/>
+            <Route path="/createPost" element={<CreatePost/>}/>
             <Route path="/login" element={<Login/>}/>
             <Route path="/register" element={<Register/>}/>
           </Routes>

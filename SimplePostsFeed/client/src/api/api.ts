@@ -95,18 +95,6 @@ export interface AccountViewModel {
      * @memberof AccountViewModel
      */
     password?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof AccountViewModel
-     */
-    refreshToken?: string;
-    /**
-     * 
-     * @type {Date}
-     * @memberof AccountViewModel
-     */
-    refreshTokenExpiryTime?: Date;
 }
 /**
  * 
@@ -147,41 +135,10 @@ export interface PostViewModel {
     body?: string;
     /**
      * 
-     * @type {number}
+     * @type {string}
      * @memberof PostViewModel
      */
-    userId?: number;
-}
-/**
- * 
- * @export
- * @interface PostViewModelDto
- */
-export interface PostViewModelDto {
-    /**
-     * 
-     * @type {number}
-     * @memberof PostViewModelDto
-     */
-    id?: number;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostViewModelDto
-     */
-    title?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof PostViewModelDto
-     */
-    body?: string;
-    /**
-     * 
-     * @type {number}
-     * @memberof PostViewModelDto
-     */
-    userId?: number;
+    nickName?: string;
 }
 /**
  * 
@@ -529,114 +486,12 @@ export const PostApiFetchParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostGet(options: any = {}): FetchArgs {
-            const localVarPath = `/api/Post`;
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdDelete(id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling apiPostIdDelete.');
-            }
-            const localVarPath = `/api/Post/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdGet(id: number, options: any = {}): FetchArgs {
-            // verify required parameter 'id' is not null or undefined
-            if (id === null || id === undefined) {
-                throw new RequiredError('id','Required parameter id was null or undefined when calling apiPostIdGet.');
-            }
-            const localVarPath = `/api/Post/{id}`
-                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
-            const localVarUrlObj = url.parse(localVarPath, true);
-            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
-            const localVarHeaderParameter = {} as any;
-            const localVarQueryParameter = {} as any;
-
-            // authentication Bearer required
-            if (configuration && configuration.apiKey) {
-                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
-					? configuration.apiKey("Authorization")
-					: configuration.apiKey;
-                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
-            }
-
-            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
-            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
-            delete localVarUrlObj.search;
-            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-
-            return {
-                url: url.format(localVarUrlObj),
-                options: localVarRequestOptions,
-            };
-        },
-        /**
-         * 
          * @param {PostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostPost(body?: PostViewModel, options: any = {}): FetchArgs {
-            const localVarPath = `/api/Post`;
+        apiPostCreatePostsPost(body?: PostViewModel, options: any = {}): FetchArgs {
+            const localVarPath = `/api/Post/createPosts`;
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
             const localVarHeaderParameter = {} as any;
@@ -664,6 +519,102 @@ export const PostApiFetchParamCreator = function (configuration?: Configuration)
                 options: localVarRequestOptions,
             };
         },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetAllPostsGet(options: any = {}): FetchArgs {
+            const localVarPath = `/api/Post/getAllPosts`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetCurrentUserPostsGet(options: any = {}): FetchArgs {
+            const localVarPath = `/api/Post/getCurrentUserPosts`;
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'GET' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostRemovePostIdDelete(id: number, options: any = {}): FetchArgs {
+            // verify required parameter 'id' is not null or undefined
+            if (id === null || id === undefined) {
+                throw new RequiredError('id','Required parameter id was null or undefined when calling apiPostRemovePostIdDelete.');
+            }
+            const localVarPath = `/api/Post/removePost/{id}`
+                .replace(`{${"id"}}`, encodeURIComponent(String(id)));
+            const localVarUrlObj = url.parse(localVarPath, true);
+            const localVarRequestOptions = Object.assign({ method: 'DELETE' }, options);
+            const localVarHeaderParameter = {} as any;
+            const localVarQueryParameter = {} as any;
+
+            // authentication Bearer required
+            if (configuration && configuration.apiKey) {
+                const localVarApiKeyValue = typeof configuration.apiKey === 'function'
+					? configuration.apiKey("Authorization")
+					: configuration.apiKey;
+                localVarHeaderParameter["Authorization"] = localVarApiKeyValue;
+            }
+
+            localVarUrlObj.query = Object.assign({}, localVarUrlObj.query, localVarQueryParameter, options.query);
+            // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
+            delete localVarUrlObj.search;
+            localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
+
+            return {
+                url: url.format(localVarUrlObj),
+                options: localVarRequestOptions,
+            };
+        },
     }
 };
 
@@ -675,65 +626,64 @@ export const PostApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PostViewModelDto>> {
-            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostGet(options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdDelete(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<PostViewModelDto> {
-            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostIdDelete(id, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdGet(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PostViewModelDto>> {
-            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostIdGet(id, options);
-            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
-                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
-                    if (response.status >= 200 && response.status < 300) {
-                        return response.json();
-                    } else {
-                        throw response;
-                    }
-                });
-            };
-        },
-        /**
-         * 
          * @param {PostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostPost(body?: PostViewModel, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
-            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostPost(body, options);
+        apiPostCreatePostsPost(body?: PostViewModel, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostCreatePostsPost(body, options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response;
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetAllPostsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PostViewModel>> {
+            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostGetAllPostsGet(options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetCurrentUserPostsGet(options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Array<PostViewModel>> {
+            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostGetCurrentUserPostsGet(options);
+            return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
+                return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
+                    if (response.status >= 200 && response.status < 300) {
+                        return response.json();
+                    } else {
+                        throw response;
+                    }
+                });
+            };
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostRemovePostIdDelete(id: number, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+            const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostRemovePostIdDelete(id, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
                     if (response.status >= 200 && response.status < 300) {
@@ -755,38 +705,37 @@ export const PostApiFactory = function (configuration?: Configuration, fetch?: F
     return {
         /**
          * 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostGet(options?: any) {
-            return PostApiFp(configuration).apiPostGet(options)(fetch, basePath);
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdDelete(id: number, options?: any) {
-            return PostApiFp(configuration).apiPostIdDelete(id, options)(fetch, basePath);
-        },
-        /**
-         * 
-         * @param {number} id 
-         * @param {*} [options] Override http request option.
-         * @throws {RequiredError}
-         */
-        apiPostIdGet(id: number, options?: any) {
-            return PostApiFp(configuration).apiPostIdGet(id, options)(fetch, basePath);
-        },
-        /**
-         * 
          * @param {PostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostPost(body?: PostViewModel, options?: any) {
-            return PostApiFp(configuration).apiPostPost(body, options)(fetch, basePath);
+        apiPostCreatePostsPost(body?: PostViewModel, options?: any) {
+            return PostApiFp(configuration).apiPostCreatePostsPost(body, options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetAllPostsGet(options?: any) {
+            return PostApiFp(configuration).apiPostGetAllPostsGet(options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostGetCurrentUserPostsGet(options?: any) {
+            return PostApiFp(configuration).apiPostGetCurrentUserPostsGet(options)(fetch, basePath);
+        },
+        /**
+         * 
+         * @param {number} id 
+         * @param {*} [options] Override http request option.
+         * @throws {RequiredError}
+         */
+        apiPostRemovePostIdDelete(id: number, options?: any) {
+            return PostApiFp(configuration).apiPostRemovePostIdDelete(id, options)(fetch, basePath);
         },
     };
 };
@@ -800,45 +749,44 @@ export const PostApiFactory = function (configuration?: Configuration, fetch?: F
 export class PostApi extends BaseAPI {
     /**
      * 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PostApi
-     */
-    public apiPostGet(options?: any) {
-        return PostApiFp(this.configuration).apiPostGet(options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {number} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PostApi
-     */
-    public apiPostIdDelete(id: number, options?: any) {
-        return PostApiFp(this.configuration).apiPostIdDelete(id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * 
-     * @param {number} id 
-     * @param {*} [options] Override http request option.
-     * @throws {RequiredError}
-     * @memberof PostApi
-     */
-    public apiPostIdGet(id: number, options?: any) {
-        return PostApiFp(this.configuration).apiPostIdGet(id, options)(this.fetch, this.basePath);
-    }
-
-    /**
-     * 
      * @param {PostViewModel} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PostApi
      */
-    public apiPostPost(body?: PostViewModel, options?: any) {
-        return PostApiFp(this.configuration).apiPostPost(body, options)(this.fetch, this.basePath);
+    public apiPostCreatePostsPost(body?: PostViewModel, options?: any) {
+        return PostApiFp(this.configuration).apiPostCreatePostsPost(body, options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public apiPostGetAllPostsGet(options?: any) {
+        return PostApiFp(this.configuration).apiPostGetAllPostsGet(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public apiPostGetCurrentUserPostsGet(options?: any) {
+        return PostApiFp(this.configuration).apiPostGetCurrentUserPostsGet(options)(this.fetch, this.basePath);
+    }
+
+    /**
+     * 
+     * @param {number} id 
+     * @param {*} [options] Override http request option.
+     * @throws {RequiredError}
+     * @memberof PostApi
+     */
+    public apiPostRemovePostIdDelete(id: number, options?: any) {
+        return PostApiFp(this.configuration).apiPostRemovePostIdDelete(id, options)(this.fetch, this.basePath);
     }
 
 }

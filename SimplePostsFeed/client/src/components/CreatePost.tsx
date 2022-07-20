@@ -4,29 +4,29 @@ import {useNavigate, useParams} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
 import { PostViewModel} from "../api";
 import ApiSingleton from "../api/ApiSingleton";
+import AuthService from "../services/AuthService";
 
 const defaultValues: PostViewModel = {
     title: "",
     body: "",
-    userId: -1,
+    nickName: "",
 };
 
 const CreatePost = () => {
     const [error, setError] = useState<string>();
     const {register, handleSubmit} = useForm<PostViewModel>({defaultValues});
     const navigate = useNavigate();
-    const {id} = useParams();
 
     const onSubmit: SubmitHandler<PostViewModel> = async (user) => {
         try {
             const post: PostViewModel = {
                 title: user.title,
                 body: user.body,
-                userId: Number(id),
+                nickName: ApiSingleton.authService.getUserName(),
             };
 
             console.log(post);
-            await ApiSingleton.postApi.apiPostPost(post);
+            await ApiSingleton.postApi.apiPostCreatePostsPost(post);
 
             navigate("/");
             window.location.reload();
