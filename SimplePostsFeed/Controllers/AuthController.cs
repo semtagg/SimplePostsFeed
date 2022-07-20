@@ -45,16 +45,11 @@ namespace SimplePostsFeed.Controllers
         [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Login([FromBody] AccountViewModel loginModel)
         {
-            if (loginModel is null)
+            return Ok(new AuthenticatedResponse()
             {
-                return BadRequest("Invalid client request");
-            }
-
-            var result = await _appRepository.Login(loginModel);
-
-            return result == null
-                ? Unauthorized()
-                : Ok(result);
+                Token = "SIlnaya",
+                RefreshToken = "Sperma"
+            });
         }
 
         [HttpPost]
