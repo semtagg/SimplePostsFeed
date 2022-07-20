@@ -11,7 +11,7 @@ namespace SimplePostsFeed.Repository
         Task<AuthenticatedResponse> Refresh(TokenApiModel tokenApiModel);
         Task Revoke(string userName);
         Task<PostViewModel[]> GetAllPosts();
-        Task<PostViewModel[]> GetPostByUserId(int userId);
+        Task<PostViewModel[]> GetPostByUserId(string token);
         Task CreatePost(PostViewModel post, string token);
         Task UpdatePost(PostViewModel item);
         Task<PostViewModel> DeletePost(int id);

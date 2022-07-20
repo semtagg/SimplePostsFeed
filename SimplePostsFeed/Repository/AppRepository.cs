@@ -82,7 +82,8 @@ namespace SimplePostsFeed.Repository
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name; //this is mapped to the Name claim by default
-            var user = await _context.Accounts.SingleOrDefaultAsync(u => u.UserName == username);
+            var user = await _context.Accounts
+                .SingleOrDefaultAsync(u => u.UserName == username);
 
             if (user is null || user.RefreshToken != refreshToken || user.RefreshTokenExpiryTime <= DateTime.Now)
                 return null;
@@ -102,7 +103,8 @@ namespace SimplePostsFeed.Repository
 
         public async Task Revoke(string userName)
         {
-            var user = await _context.Accounts.SingleOrDefaultAsync(u => u.UserName == userName);
+            var user = await _context.Accounts
+                .SingleOrDefaultAsync(u => u.UserName == userName);
             user.RefreshToken = null;
             await _context.SaveChangesAsync();
         }
@@ -120,8 +122,9 @@ namespace SimplePostsFeed.Repository
             }).ToArray();
         }
 
-        public async Task<PostViewModel[]> GetPostByUserId(int userId)
+        public async Task<PostViewModel[]> GetPostByUserId(string token)
         {
+            var userId = 1;/*int.Parse(GetUserIdFromToken(token));*/
             var user = await _context.Accounts
                 .FirstOrDefaultAsync(a => a.Id == userId);
 
@@ -139,10 +142,9 @@ namespace SimplePostsFeed.Repository
 
         public async Task CreatePost(PostViewModel post, string token)
         {
-            // проверка на null
-            var tmp = _tokenService.GetPrincipalFromExpiredToken(token[7..]).Claims.ToArray()[0].Value; 
+            var userId = int.Parse(GetUserIdFromToken(token));
             var postDto = _mapper.Map<PostViewModelDto>(post);
-            postDto.UserId = int.Parse(tmp);
+            postDto.UserId = userId;
             await _context.Posts.AddAsync(postDto);
             await _context.SaveChangesAsync();
         }
@@ -164,5 +166,8 @@ namespace SimplePostsFeed.Repository
 
             return _mapper.Map<PostViewModel>(item);
         }
+
+        private string GetUserIdFromToken(string token)
+            => _tokenService.GetPrincipalFromExpiredToken(token[7..]).Claims.ToArray()[0].Value;
     }
 }

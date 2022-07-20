@@ -41,7 +41,7 @@ namespace SimplePostsFeed.Services
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience =
-                    true, //you might want to validate the audience and issuer depending on your use case
+                    false, //you might want to validate the audience and issuer depending on your use case
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),

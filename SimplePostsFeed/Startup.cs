@@ -83,7 +83,7 @@ namespace SimplePostsFeed
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = "SimplePostsFeed",
-                        ValidateIssuer = true,
+                        ValidateIssuer = false,
                         ValidateAudience = false,
                         ValidateLifetime = true,
                         IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes("superSecretKey@345")),

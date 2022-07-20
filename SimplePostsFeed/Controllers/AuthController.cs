@@ -6,6 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SimplePostsFeed.Extensions;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
 using SimplePostsFeed.Repository;
@@ -75,7 +76,7 @@ namespace SimplePostsFeed.Controllers
         [Route("revoke")]
         public async Task<IActionResult> Revoke()
         {
-            var userName = User.Claims.FirstOrDefault(c => c.Type == "_userName").Value;
+            var userName = User.GetUserName();
             await _appRepository.Revoke(userName);
 
             return Ok();

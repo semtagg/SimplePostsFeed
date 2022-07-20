@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SimplePostsFeed.Extensions;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
 using SimplePostsFeed.Repository;
@@ -21,8 +22,7 @@ namespace SimplePostsFeed.Controllers
             _appRepository = appRepository ?? throw new ArgumentNullException(nameof(appRepository));
         }
 
-        [HttpGet]
-        [Authorize]
+        [HttpGet("getAllPosts")]
         [ProducesResponseType(typeof(PostViewModel[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllPosts()
         {
@@ -33,35 +33,33 @@ namespace SimplePostsFeed.Controllers
                 : Ok(result);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("getCurrentUserPosts")]
         [ProducesResponseType(typeof(PostViewModel[]), (int)HttpStatusCode.OK)]
-        public async Task<IActionResult> GetPostByUserId(int id)
+        public async Task<IActionResult> GetPostByUserId()
         {
-            var result = await _appRepository.GetPostByUserId(id);
+            var token = Request.GetToken();
+            var result = await _appRepository.GetPostByUserId(token);
 
             return result == null
                 ? NotFound()
                 : Ok(result);
         }
 
-        [HttpPost]
+        [HttpPost("createPosts")]
         public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
         {
-            var token = Request.Headers["Authorization"].ToString();
+            var token = Request.GetToken();
             await _appRepository.CreatePost(post, token);
 
             return Ok();
         }
 
-        [HttpDelete("{id}")]
-        [ProducesResponseType(typeof(PostViewModelDto), (int)HttpStatusCode.OK)]
+        [HttpDelete("removePost/{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            var result = await _appRepository.DeletePost(id);
+            await _appRepository.DeletePost(id);
 
-            return result == null
-                ? NotFound()
-                : Ok(result);
+            return Ok();
         }
     }
 }
