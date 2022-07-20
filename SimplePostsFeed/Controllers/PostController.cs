@@ -22,6 +22,7 @@ namespace SimplePostsFeed.Controllers
         }
 
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(PostViewModel[]), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllPosts()
         {

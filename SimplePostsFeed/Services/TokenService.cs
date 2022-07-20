@@ -13,11 +13,13 @@ namespace SimplePostsFeed.Services
         public string GenerateAccessToken(IEnumerable<Claim> claims)
         {
             var secretKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345"));
+            var timeNow = DateTime.UtcNow;
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
                 issuer: "SimplePostsFeed",
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(5),
+                notBefore: timeNow,
+                expires: timeNow.AddMinutes(120),
                 signingCredentials: signinCredentials
             );
             var tokenString = new JwtSecurityTokenHandler().WriteToken(tokeOptions);
@@ -39,11 +41,11 @@ namespace SimplePostsFeed.Services
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateAudience =
-                    false, //you might want to validate the audience and issuer depending on your use case
+                    true, //you might want to validate the audience and issuer depending on your use case
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("superSecretKey@345")),
-                ValidateLifetime = false //here we are saying that we don't care about the token's expiration date
+                ValidateLifetime = true //here we are saying that we don't care about the token's expiration date
             };
             var tokenHandler = new JwtSecurityTokenHandler();
             SecurityToken securityToken;
