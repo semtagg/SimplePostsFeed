@@ -1,8 +1,21 @@
 version: '3.4'
 
 services:
-  simplepostsfeed:
-    image: ${DOCKER_REGISTRY-}simplepostsfeed
+  mssqllocaldb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+
+  spffront:
+    image: spffront
+    build:
+      context: ./SimplePostsFeed/client
+      dockerfile: Dockerfile
+    depends_on:
+      - spfback
+  
+  spfback:
+    image: spfback
     build:
       context: .
       dockerfile: SimplePostsFeed/Dockerfile
+    depends_on:
+      - mssqllocaldb

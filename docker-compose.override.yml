@@ -1,12 +1,21 @@
 version: '3.4'
 
 services:
-  simplepostsfeed:
+  mssqllocaldb:
     environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1433"
+
+  spffront:
+    ports:
+      - "3000"
+
+  spfback:
+    environment:
+      - ConnectionStrings:AppContext=Server=mssqllocaldb;Database=AppContext;User=sa;Password=Your_password123;
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
+      - ASPNETCORE_URLS=https://+:80
     ports:
       - "80"
-      - "443"
-    volumes:
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
