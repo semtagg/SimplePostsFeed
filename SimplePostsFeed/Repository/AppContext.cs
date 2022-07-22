@@ -3,11 +3,12 @@ using SimplePostsFeed.Models.DTO;
 
 namespace SimplePostsFeed.Repository
 {
-    public class AppContext : DbContext
+    public sealed class AppContext : DbContext
     {
         public AppContext (DbContextOptions<AppContext> options)
             : base(options)
         {
+            Database.EnsureCreated();
         }
         
         public DbSet<PostViewModelDto> Posts { get; set; }
