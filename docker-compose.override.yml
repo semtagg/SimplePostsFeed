@@ -6,16 +6,20 @@ services:
       SA_PASSWORD: "Your_password123"
       ACCEPT_EULA: "Y"
     ports:
-      - "1433"
+      - "1488:1433"
 
   spffront:
     ports:
-      - "3000"
+      - "3000:3000"
 
   spfback:
     environment:
       - ConnectionStrings:AppContext=Server=mssqllocaldb;Database=AppContext;User=sa;Password=Your_password123;
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:80
+      - ASPNETCORE_URLS=https://+:5000
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=madison
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/dev_cert.pfx
     ports:
-      - "80"
+      - "5000:5000"
+    volumes:
+      - ./conf.d/https/:/https/
