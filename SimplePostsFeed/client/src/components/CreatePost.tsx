@@ -2,10 +2,10 @@ import React, {useState} from "react";
 import {Button, Form} from "react-bootstrap";
 import {useNavigate} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {PostViewModel} from "../api";
+import {CreatePostViewModel} from "../api";
 import ApiSingleton from "../api/ApiSingleton";
 
-const defaultValues: PostViewModel = {
+const defaultValues: CreatePostViewModel = {
   title: "",
   body: "",
   nickName: "",
@@ -13,12 +13,12 @@ const defaultValues: PostViewModel = {
 
 const CreatePost = () => {
   const [error, setError] = useState<string>();
-  const {register, handleSubmit} = useForm<PostViewModel>({defaultValues});
+  const {register, handleSubmit} = useForm<CreatePostViewModel>({defaultValues});
   const navigate = useNavigate();
 
-  const onSubmit: SubmitHandler<PostViewModel> = async (user) => {
+  const onSubmit: SubmitHandler<CreatePostViewModel> = async (user) => {
     try {
-      const post: PostViewModel = {
+      const post: CreatePostViewModel = {
         title: user.title,
         body: user.body,
         nickName: ApiSingleton.authService.getUserName(),

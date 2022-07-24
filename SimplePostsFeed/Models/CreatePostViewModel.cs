@@ -1,9 +1,7 @@
-﻿namespace SimplePostsFeed.Models
+namespace SimplePostsFeed.Models
 {
-    public class PostViewModel
+    public class CreatePostViewModel
     {
-        public int Id { get; set; }
-
         public string Title { get; set; }
 
         public string Body { get; set; }

@@ -15,7 +15,6 @@ const AllPosts = () => {
     fetchData()
       // make sure to catch any error
       .catch(console.error);
-    ;
   }, [fetchData])
 
   return (

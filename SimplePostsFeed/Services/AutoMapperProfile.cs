@@ -9,6 +9,7 @@ namespace SimplePostsFeed.Services
         public AutoMapperProfile()
         {
             CreateMap<PostViewModel, PostViewModelDto>().ReverseMap();
+            CreateMap<CreatePostViewModel, PostViewModelDto>().ReverseMap();
             CreateMap<AccountViewModel, AccountViewModelDto>().ReverseMap();
         }
     }

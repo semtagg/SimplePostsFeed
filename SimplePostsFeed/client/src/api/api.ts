@@ -118,9 +118,40 @@ export interface AuthenticatedResponse {
 /**
  * 
  * @export
+ * @interface CreatePostViewModel
+ */
+export interface CreatePostViewModel {
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostViewModel
+     */
+    title?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostViewModel
+     */
+    body?: string;
+    /**
+     * 
+     * @type {string}
+     * @memberof CreatePostViewModel
+     */
+    nickName?: string;
+}
+/**
+ * 
+ * @export
  * @interface PostViewModel
  */
 export interface PostViewModel {
+    /**
+     * 
+     * @type {number}
+     * @memberof PostViewModel
+     */
+    id?: number;
     /**
      * 
      * @type {string}
@@ -486,11 +517,11 @@ export const PostApiFetchParamCreator = function (configuration?: Configuration)
     return {
         /**
          * 
-         * @param {PostViewModel} [body] 
+         * @param {CreatePostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostCreatePostsPost(body?: PostViewModel, options: any = {}): FetchArgs {
+        apiPostCreatePostsPost(body?: CreatePostViewModel, options: any = {}): FetchArgs {
             const localVarPath = `/api/Post/createPosts`;
             const localVarUrlObj = url.parse(localVarPath, true);
             const localVarRequestOptions = Object.assign({ method: 'POST' }, options);
@@ -511,7 +542,7 @@ export const PostApiFetchParamCreator = function (configuration?: Configuration)
             // fix override query string Detail: https://stackoverflow.com/a/7517673/1077943
             delete localVarUrlObj.search;
             localVarRequestOptions.headers = Object.assign({}, localVarHeaderParameter, options.headers);
-            const needsSerialization = (<any>"PostViewModel" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
+            const needsSerialization = (<any>"CreatePostViewModel" !== "string") || localVarRequestOptions.headers['Content-Type'] === 'application/json';
             localVarRequestOptions.body =  needsSerialization ? JSON.stringify(body || {}) : (body || "");
 
             return {
@@ -626,11 +657,11 @@ export const PostApiFp = function(configuration?: Configuration) {
     return {
         /**
          * 
-         * @param {PostViewModel} [body] 
+         * @param {CreatePostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostCreatePostsPost(body?: PostViewModel, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
+        apiPostCreatePostsPost(body?: CreatePostViewModel, options?: any): (fetch?: FetchAPI, basePath?: string) => Promise<Response> {
             const localVarFetchArgs = PostApiFetchParamCreator(configuration).apiPostCreatePostsPost(body, options);
             return (fetch: FetchAPI = isomorphicFetch, basePath: string = BASE_PATH) => {
                 return fetch(basePath + localVarFetchArgs.url, localVarFetchArgs.options).then((response) => {
@@ -705,11 +736,11 @@ export const PostApiFactory = function (configuration?: Configuration, fetch?: F
     return {
         /**
          * 
-         * @param {PostViewModel} [body] 
+         * @param {CreatePostViewModel} [body] 
          * @param {*} [options] Override http request option.
          * @throws {RequiredError}
          */
-        apiPostCreatePostsPost(body?: PostViewModel, options?: any) {
+        apiPostCreatePostsPost(body?: CreatePostViewModel, options?: any) {
             return PostApiFp(configuration).apiPostCreatePostsPost(body, options)(fetch, basePath);
         },
         /**
@@ -749,12 +780,12 @@ export const PostApiFactory = function (configuration?: Configuration, fetch?: F
 export class PostApi extends BaseAPI {
     /**
      * 
-     * @param {PostViewModel} [body] 
+     * @param {CreatePostViewModel} [body] 
      * @param {*} [options] Override http request option.
      * @throws {RequiredError}
      * @memberof PostApi
      */
-    public apiPostCreatePostsPost(body?: PostViewModel, options?: any) {
+    public apiPostCreatePostsPost(body?: CreatePostViewModel, options?: any) {
         return PostApiFp(this.configuration).apiPostCreatePostsPost(body, options)(this.fetch, this.basePath);
     }
 

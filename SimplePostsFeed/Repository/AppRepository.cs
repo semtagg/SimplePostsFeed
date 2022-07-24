@@ -106,6 +106,7 @@ namespace SimplePostsFeed.Repository
             var user = await _context.Accounts
                 .SingleOrDefaultAsync(u => u.UserName == userName);
             user.RefreshToken = null;
+
             await _context.SaveChangesAsync();
         }
 
@@ -116,6 +117,7 @@ namespace SimplePostsFeed.Repository
 
             return data.Select(d => new PostViewModel()
             {
+                Id = d.Id,
                 Title = d.Title,
                 Body = d.Body,
                 NickName = users.FirstOrDefault(u => u.Id == d.UserId)?.UserName
@@ -124,7 +126,7 @@ namespace SimplePostsFeed.Repository
 
         public async Task<PostViewModel[]> GetPostByUserId(string token)
         {
-            var userId = 1;/*int.Parse(GetUserIdFromToken(token));*/
+            var userId = int.Parse(GetUserIdFromToken(token));
             var user = await _context.Accounts
                 .FirstOrDefaultAsync(a => a.Id == userId);
 
@@ -134,13 +136,14 @@ namespace SimplePostsFeed.Repository
 
             return data.Select(d => new PostViewModel()
             {
+                Id = d.Id,
                 Title = d.Title,
                 Body = d.Body,
                 NickName = user.UserName
             }).ToArray();
         }
 
-        public async Task CreatePost(PostViewModel post, string token)
+        public async Task CreatePost(CreatePostViewModel post, string token)
         {
             var userId = int.Parse(GetUserIdFromToken(token));
             var postDto = _mapper.Map<PostViewModelDto>(post);
@@ -154,7 +157,7 @@ namespace SimplePostsFeed.Repository
             throw new System.NotImplementedException();
         }
 
-        public async Task<PostViewModel> DeletePost(int id)
+        public async Task<PostViewModel> DeletePost(int id, string token)
         {
             var item = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
 

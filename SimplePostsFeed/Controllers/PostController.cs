@@ -46,7 +46,7 @@ namespace SimplePostsFeed.Controllers
         }
 
         [HttpPost("createPosts")]
-        public async Task<IActionResult> CreatePost([FromBody] PostViewModel post)
+        public async Task<IActionResult> CreatePost([FromBody] CreatePostViewModel post)
         {
             var token = Request.GetToken();
             await _appRepository.CreatePost(post, token);
@@ -57,7 +57,8 @@ namespace SimplePostsFeed.Controllers
         [HttpDelete("removePost/{id}")]
         public async Task<IActionResult> DeletePost(int id)
         {
-            await _appRepository.DeletePost(id);
+            var token = Request.GetToken();
+            await _appRepository.DeletePost(id, token);
 
             return Ok();
         }
