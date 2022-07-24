@@ -50,15 +50,14 @@ namespace SimplePostsFeed.Controllers
                 return BadRequest("Invalid client request");
             }
 
-            var result = await _appRepository.Register(loginModel);
+            var result = await _appRepository.Login(loginModel);
 
             return result == null
                 ? Unauthorized()
                 : Ok(result);
         }
 
-        [HttpPost]
-        [Route("refresh")]
+        [HttpPost("refresh")]
         [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Refresh(TokenApiModel tokenApiModel)
         {
@@ -72,8 +71,7 @@ namespace SimplePostsFeed.Controllers
                 : Ok(result);
         }
 
-        [HttpPost]
-        [Route("revoke")]
+        [HttpPost("revoke")]
         public async Task<IActionResult> Revoke()
         {
             var userName = User.GetUserName();

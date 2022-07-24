@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import logo from './logo.svg';
 import './App.css';
-import {Routes, Route, Link, useNavigate} from "react-router-dom";
+import {Link, Route, Routes, useNavigate} from "react-router-dom";
 import ApiSingleton from "./api/ApiSingleton";
 import Login from "./components/Login";
 import Register from "./components/Register";
@@ -25,8 +24,7 @@ function App() {
     const user = ApiSingleton.authService.getProfile();
 
     if (user) {
-      if (!ApiSingleton.authService.isLoggedIn())
-      {
+      if (!ApiSingleton.authService.isLoggedIn()) {
         logOut();
         navigate("/login");
         window.location.reload();
@@ -41,66 +39,67 @@ function App() {
   };
 
   return (
-      <div>
-        <nav className="navbar navbar-expand navbar-dark bg-primary">
-          <div className="navbar-nav mr-auto">
+    <div>
+      <nav className="navbar navbar-expand navbar-dark bg-primary">
+        <div className="navbar-nav mr-auto">
+          <li className="nav-item">
+            <Link to={"/"} className="nav-link">
+              AllPosts
+            </Link>
+          </li>
+
+          {currentUser && (
+            <>
+              <li className="nav-item">
+                <Link to={"/getCurrentUserPosts"} className="nav-link">
+                  MyPosts
+                </Link>
+              </li>
+              <li className="nav-item">
+                <Link to={"/createPost"} className="nav-link">
+                  CreatePost
+                </Link>
+              </li>
+            </>
+          )}
+        </div>
+
+        {currentUser ? (
+          <div className="navbar-nav ms-auto">
             <li className="nav-item">
-              <Link to={"/"} className="nav-link">
-                AllPosts
+              <a href="/login" className="nav-link" onClick={logOut}>
+                Logout
+              </a>
+            </li>
+          </div>
+        ) : (
+          <div className="navbar-nav ms-auto">
+            <li className="nav-item">
+              <Link to={"/login"} className="nav-link">
+                Login
               </Link>
             </li>
 
-            {currentUser && (
-                <>
-                  <li className="nav-item">
-                    <Link to={"/getCurrentUserPosts"} className="nav-link">
-                      MyPosts
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to={"/createPost"} className="nav-link">
-                      CreatePost
-                    </Link>
-                  </li>
-                </>
-            )}
+            <li className="nav-item">
+              <Link to={"/register"} className="nav-link">
+                Sign up
+              </Link>
+            </li>
           </div>
+        )}
+      </nav>
 
-          {currentUser ? (
-              <div className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <a href="/login" className="nav-link" onClick={logOut}>
-                    Logout
-                  </a>
-                </li>
-              </div>
-          ) : (
-              <div className="navbar-nav ms-auto">
-                <li className="nav-item">
-                  <Link to={"/login"} className="nav-link">
-                    Login
-                  </Link>
-                </li>
-
-                <li className="nav-item">
-                  <Link to={"/register"} className="nav-link">
-                    Sign up
-                  </Link>
-                </li>
-              </div>
-          )}
-        </nav>
-
-        <div className="container mt-3">
-          <Routes>
-            <Route path="/" element={<AllPosts/>}/>
-            <Route path="/getCurrentUserPosts" element={<CurrentUserPosts/>}/>
-            <Route path="/createPost" element={<CreatePost/>}/>
-            <Route path="/login" element={<Login/>}/>
-            <Route path="/register" element={<Register/>}/>
-          </Routes>
-        </div>
+      <div className="container mt-3">
+        <Routes>
+          <Route path="/" element={<AllPosts/>}/>
+          <Route path="/getCurrentUserPosts" element={<CurrentUserPosts/>}/>
+          <Route path="/createPost" element={<CreatePost/>}/>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/register" element={<Register/>}/>
+        </Routes>
       </div>
+    </div>
   );
 }
+
 export default App;
