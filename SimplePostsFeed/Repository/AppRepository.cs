@@ -160,8 +160,9 @@ namespace SimplePostsFeed.Repository
         public async Task<PostViewModel> DeletePost(int id, string token)
         {
             var item = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
-
-            if (item != null)
+            var userId = int.Parse(GetUserIdFromToken(token));
+            
+            if (item != null && item.UserId == userId)
             {
                 _context.Posts.Remove(item);
                 await _context.SaveChangesAsync();
