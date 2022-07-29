@@ -7,6 +7,7 @@ import Register from "./components/Register";
 import AllPosts from "./components/AllPosts";
 import CreatePost from "./components/CreatePost";
 import CurrentUserPosts from "./components/CurrentUserPosts";
+import UpdatePost from "./components/UpdatePost";
 
 interface TokenPayload {
   _id: string;
@@ -96,6 +97,7 @@ function App() {
           <Route path="/createPost" element={<CreatePost/>}/>
           <Route path="/login" element={<Login/>}/>
           <Route path="/register" element={<Register/>}/>
+          <Route path="/updatePost/:id" element={<UpdatePost/>}/>
         </Routes>
       </div>
     </div>

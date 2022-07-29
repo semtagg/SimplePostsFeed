@@ -2,6 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import ApiSingleton from "../api/ApiSingleton";
 import {PostViewModel} from "../api";
 import {useParams} from "react-router";
+import {Link} from "react-router-dom";
 
 const CurrentUserPosts = () => {
   const [currentUserPosts, setCurrentUserPosts] = useState<PostViewModel[]>([]);
@@ -37,7 +38,13 @@ const CurrentUserPosts = () => {
             <div className="card-body">
               <h5 className="card-title">{post.nickName}</h5>
               <p className="card-text">{post.body}</p>
-              <a href="#" className="btn btn-primary" onClick={() => deletePost(post.id!)}>Удалить пост</a>
+              <a className="btn btn-primary" onClick={() => deletePost(post.id!)}>Удалить пост</a>
+
+              <a className="btn btn-primary" >
+                <Link to={"/updatePost/" + post.id} className="nav-link">
+                  Отредактировать пост
+                </Link>
+              </a>
             </div>
           </div>
         ))}
