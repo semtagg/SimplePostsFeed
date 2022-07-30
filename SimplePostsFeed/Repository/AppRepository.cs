@@ -143,9 +143,12 @@ namespace SimplePostsFeed.Repository
             }).ToArray();
         }
 
-        public Task<PostViewModel> GetPostById(int id, string token)
+        public async Task<PostViewModel> GetPostById(int id, string token)
         {
-            throw new System.NotImplementedException();
+            // TODO: validate token
+            var post = await _context.Posts.FirstOrDefaultAsync(p=>p.Id == id);
+
+            return _mapper.Map<PostViewModel>(post);
         }
 
         public async Task CreatePost(CreatePostViewModel post, string token)
@@ -159,7 +162,9 @@ namespace SimplePostsFeed.Repository
 
         public Task UpdatePost(UpdateViewModel post, string token )
         {
-            throw new System.NotImplementedException();
+            // TODO: validate token
+            //var data = await _context.Posts.Update();
+            throw new NotImplementedException();
         }
 
         public async Task<PostViewModel> DeletePost(int id, string token)
