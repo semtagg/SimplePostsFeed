@@ -9,7 +9,6 @@ const defaultValues: UpdateViewModel = {
   id: -1,
   title: "",
   body: "",
-  nickName: "",
 };
 
 const UpdatePost = () => {
@@ -34,11 +33,9 @@ const UpdatePost = () => {
         id: Number(id),
         title: user.title,
         body: user.body,
-        nickName: ApiSingleton.authService.getUserName(),
       };
 
-      console.log(post);
-      /*await ApiSingleton.postApi.apiPostCreatePostsPost(post);*/
+      await ApiSingleton.postApi.apiPostUpdatePostPost(post);
       navigate("/");
       window.location.reload();
     } catch (err) {

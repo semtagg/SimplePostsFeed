@@ -214,12 +214,6 @@ export interface UpdateViewModel {
      * @memberof UpdateViewModel
      */
     body?: string;
-    /**
-     * 
-     * @type {string}
-     * @memberof UpdateViewModel
-     */
-    nickName?: string;
 }
 /**
  * AuthApi - fetch parameter creator

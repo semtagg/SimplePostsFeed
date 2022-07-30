@@ -160,11 +160,19 @@ namespace SimplePostsFeed.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdatePost(UpdateViewModel post, string token )
+        public async Task UpdatePost(UpdateViewModel post, string token)
         {
-            // TODO: validate token
-            //var data = await _context.Posts.Update();
-            throw new NotImplementedException();
+            var userId = int.Parse(GetUserIdFromToken(token));
+            var data = new PostViewModelDto()
+            {
+                Id = post.Id,
+                Title = post.Title,
+                Body = post.Body,
+                UserId = userId
+            };
+            
+            _context.Posts.Update(data);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<PostViewModel> DeletePost(int id, string token)
