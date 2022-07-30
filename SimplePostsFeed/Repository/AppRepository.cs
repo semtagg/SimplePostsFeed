@@ -143,6 +143,11 @@ namespace SimplePostsFeed.Repository
             }).ToArray();
         }
 
+        public Task<PostViewModel> GetPostById(int id, string token)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task CreatePost(CreatePostViewModel post, string token)
         {
             var userId = int.Parse(GetUserIdFromToken(token));
@@ -152,7 +157,7 @@ namespace SimplePostsFeed.Repository
             await _context.SaveChangesAsync();
         }
 
-        public Task UpdatePost(PostViewModel item)
+        public Task UpdatePost(UpdateViewModel post, string token )
         {
             throw new System.NotImplementedException();
         }

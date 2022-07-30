@@ -44,6 +44,18 @@ namespace SimplePostsFeed.Controllers
                 ? NotFound()
                 : Ok(result);
         }
+        
+        [HttpGet("getPostById/{id}")]
+        [ProducesResponseType(typeof(PostViewModel), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetPostById(int id)
+        {
+            var token = Request.GetToken();
+            var result = await _appRepository.GetPostById(id, token);
+
+            return result == null
+                ? NotFound()
+                : Ok(result);
+        }
 
         [HttpPost("createPosts")]
         public async Task<IActionResult> CreatePost([FromBody] CreatePostViewModel post)
@@ -59,6 +71,15 @@ namespace SimplePostsFeed.Controllers
         {
             var token = Request.GetToken();
             await _appRepository.DeletePost(id, token);
+
+            return Ok();
+        }
+        
+        [HttpPost("updatePost")]
+        public async Task<IActionResult> UpdatePost(UpdateViewModel post)
+        {
+            var token = Request.GetToken();
+            await _appRepository.UpdatePost(post, token);
 
             return Ok();
         }

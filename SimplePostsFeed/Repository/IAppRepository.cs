@@ -12,8 +12,9 @@ namespace SimplePostsFeed.Repository
         Task Revoke(string userName);
         Task<PostViewModel[]> GetAllPosts();
         Task<PostViewModel[]> GetPostByUserId(string token);
+        Task<PostViewModel> GetPostById(int id, string token);
         Task CreatePost(CreatePostViewModel post, string token);
-        Task UpdatePost(PostViewModel item);
+        Task UpdatePost(UpdateViewModel post, string token);
         Task<PostViewModel> DeletePost(int id, string token);
     }
 }

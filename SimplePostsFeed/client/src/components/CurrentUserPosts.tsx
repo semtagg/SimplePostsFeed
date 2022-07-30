@@ -2,11 +2,12 @@ import React, {useCallback, useEffect, useState} from "react";
 import ApiSingleton from "../api/ApiSingleton";
 import {PostViewModel} from "../api";
 import {useParams} from "react-router";
-import {Link} from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 const CurrentUserPosts = () => {
   const [currentUserPosts, setCurrentUserPosts] = useState<PostViewModel[]>([]);
   const {id} = useParams();
+  const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
     const data = await ApiSingleton.postApi.apiPostGetCurrentUserPostsGet();
@@ -23,28 +24,26 @@ const CurrentUserPosts = () => {
     try {
       await ApiSingleton.postApi.apiPostRemovePostIdDelete(postId);
       window.location.reload();
-    }
-    catch (e) {
+    } catch (e) {
       console.log(e)
     }
+  };
+
+  const navigateHome = (id : number) => {
+    navigate('/updatePost/' + id);
   };
 
   return (
     <div>
       <h3>
-        {currentUserPosts.map((post) => (
-          <div className="card">
+        {currentUserPosts.map((post, index) => (
+          <div className="card" key={index}>
             <h5 className="card-header">{post.title}</h5>
             <div className="card-body">
               <h5 className="card-title">{post.nickName}</h5>
               <p className="card-text">{post.body}</p>
-              <a className="btn btn-primary" onClick={() => deletePost(post.id!)}>Удалить пост</a>
-
-              <a className="btn btn-primary" >
-                <Link to={"/updatePost/" + post.id} className="nav-link">
-                  Отредактировать пост
-                </Link>
-              </a>
+              <button className="btn btn-secondary me-1" onClick={() => navigateHome(post.id!)}>Редактировать</button>
+              <button className="btn btn-danger" onClick={() => deletePost(post.id!)}>Удалить</button>
             </div>
           </div>
         ))}
