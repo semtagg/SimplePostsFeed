@@ -145,8 +145,8 @@ namespace SimplePostsFeed.Repository
 
         public async Task<PostViewModel> GetPostById(int id, string token)
         {
-            // TODO: validate token
-            var post = await _context.Posts.FirstOrDefaultAsync(p=>p.Id == id);
+            var userId = int.Parse(GetUserIdFromToken(token));
+            var post = await _context.Posts.FirstOrDefaultAsync(p=>p.Id == id && p.UserId == userId);
 
             return _mapper.Map<PostViewModel>(post);
         }
