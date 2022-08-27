@@ -1,32 +1,26 @@
 import React, {useEffect, useState} from 'react';
 import './App.css';
 import {Link, Route, Routes, useNavigate} from "react-router-dom";
-import ApiSingleton from "./api/ApiSingleton";
 import Login from "./components/Login";
 import Register from "./components/Register";
 import AllPosts from "./components/AllPosts";
 import CreatePost from "./components/CreatePost";
 import CurrentUserPosts from "./components/CurrentUserPosts";
 import UpdatePost from "./components/UpdatePost";
+import AuthService from "./services/AuthService";
+import {TokenPayload} from "./models/Models";
 
-interface TokenPayload {
-  _id: string;
-  _name: string;
-  exp: number;
-  iss: string;
-  aud: string;
-}
 
 function App() {
   const [currentUser, setCurrentUser] = useState<TokenPayload>();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const user = ApiSingleton.authService.getProfile();
+    const user = AuthService.getProfile();
 
     if (user) {
-      if (!ApiSingleton.authService.isLoggedIn()) {
-        logOut();
+      if (!AuthService.isLoggedIn()) {
+        logout();
         navigate("/login");
         window.location.reload();
       }
@@ -35,8 +29,8 @@ function App() {
     }
   }, [navigate]);
 
-  const logOut = () => {
-    ApiSingleton.authService.logout();
+  const logout = () => {
+    AuthService.logout();
   };
 
   return (
@@ -68,7 +62,7 @@ function App() {
         {currentUser ? (
           <div className="navbar-nav ms-auto">
             <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={logOut}>
+              <a href="/login" className="nav-link" onClick={logout}>
                 Logout
               </a>
             </li>

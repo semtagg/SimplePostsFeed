@@ -2,8 +2,8 @@ import React, {useCallback, useEffect, useState} from "react";
 import {Button, Form} from "react-bootstrap";
 import {useNavigate, useParams} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {CreatePostViewModel, PostViewModel, UpdateViewModel} from "../api";
-import ApiSingleton from "../api/ApiSingleton";
+import PostService from "../services/PostService";
+import {UpdateViewModel} from "../models/Models";
 
 const defaultValues: UpdateViewModel = {
   id: -1,
@@ -17,7 +17,7 @@ const UpdatePost = () => {
   const {id}=useParams();
 
   const fetchData = useCallback(async () => {
-    const data = await ApiSingleton.postApi.apiPostGetPostByIdIdGet(Number(id));
+    const data = await PostService.getPostById(Number(id));
     setValue('title', data.title);
     setValue("body", data.body);
   }, [])
@@ -35,7 +35,7 @@ const UpdatePost = () => {
         body: user.body,
       };
 
-      await ApiSingleton.postApi.apiPostUpdatePostPost(post);
+      await PostService.updatePost(post);
       navigate("/");
       window.location.reload();
     } catch (err) {

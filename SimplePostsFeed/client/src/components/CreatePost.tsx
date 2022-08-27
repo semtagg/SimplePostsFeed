@@ -2,8 +2,9 @@ import React, {useState} from "react";
 import {Button, Form} from "react-bootstrap";
 import {useNavigate} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {CreatePostViewModel} from "../api";
-import ApiSingleton from "../api/ApiSingleton";
+import AuthService from "../services/AuthService";
+import PostService from "../services/PostService";
+import {CreatePostViewModel} from "../models/Models";
 
 const defaultValues: CreatePostViewModel = {
   title: "",
@@ -21,11 +22,11 @@ const CreatePost = () => {
       const post: CreatePostViewModel = {
         title: user.title,
         body: user.body,
-        nickName: ApiSingleton.authService.getUserName(),
+        nickName: AuthService.getUserName(),
       };
 
       console.log(post);
-      await ApiSingleton.postApi.apiPostCreatePostsPost(post);
+      await PostService.createPost(post);
 
       navigate("/");
       window.location.reload();

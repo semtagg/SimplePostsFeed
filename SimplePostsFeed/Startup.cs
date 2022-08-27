@@ -79,7 +79,7 @@ namespace SimplePostsFeed
                 })
                 .AddJwtBearer(x =>
                 {
-                    x.RequireHttpsMetadata = false; //TODO: dev env setting
+                    x.RequireHttpsMetadata = false;
                     x.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidIssuer = "SimplePostsFeed",

@@ -1,13 +1,13 @@
 import React, {useCallback, useEffect, useState} from "react";
 import {Card} from "react-bootstrap";
-import ApiSingleton from "../api/ApiSingleton";
-import {PostViewModel} from "../api";
+import PostService from "../services/PostService";
+import {PostViewModel} from "../models/Models";
 
 const AllPosts = () => {
   const [posts, setPosts] = useState<PostViewModel[]>([]);
 
   const fetchData = useCallback(async () => {
-    const data = await ApiSingleton.postApi.apiPostGetAllPostsGet();
+    const data = await PostService.getAllPosts();
     setPosts(data);
   }, [])
 

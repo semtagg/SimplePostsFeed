@@ -1,117 +1,126 @@
-import {AccountViewModel, TokenApiModel} from '../api/api';
-import ApiSingleton from "../api/ApiSingleton";
 import decode from "jwt-decode";
+import axios from "axios";
+import {AccountViewModel, AuthenticatedResponse, TokenApiModel, TokenPayload} from "../models/Models";
 
-interface TokenPayload {
-  _id: string;
-  _name: string;
-  exp: number;
-  iss: string;
-  aud: string;
+const basePath = "http://localhost:5000";
+
+const login = async (user: AccountViewModel) => {
+  const response = await axios.post<AuthenticatedResponse>(basePath + "/api/Auth/login", user);
+
+  if (response.data.token == null || response.data.refreshToken == null) {
+    return {
+      error: "error",
+      isLogin: false
+    }
+  }
+
+  setAccessToken(response.data.token);
+  setRefreshToken(response.data.refreshToken);
+
+  return {
+    error: null,
+    isLogin: true
+  }
 }
 
-export default class AuthService {
+const register = async (user: AccountViewModel) => {
+  const response = await axios.post<AuthenticatedResponse>(basePath + "/api/Auth/register", user);
 
-  constructor() {
-    this.login = this.login.bind(this);
-    this.getProfile = this.getProfile.bind(this);
-  }
-
-  async login(user: AccountViewModel) {
-    const response = await ApiSingleton.authApi.apiAuthLoginPost(user)
-    if (response.token == null || response.refreshToken == null) {
-      return {
-        error: "error",
-        isLogin: false
-      }
-    }
-
-    this.setAccessToken(response.token);
-    this.setRefreshToken(response.refreshToken);
-
+  if (response.data.token == null || response.data.refreshToken == null) {
     return {
-      error: null,
-      isLogin: true
+      error: "error",
+      isLogin: false
     }
   }
 
-  async register(user: AccountViewModel) {
-    const response = await ApiSingleton.authApi.apiAuthRegisterPost(user)
-    if (response.token == null || response.refreshToken == null) {
-      return {
-        error: "error",
-        isLogin: false
-      }
-    }
+  setAccessToken(response.data.token);
+  setRefreshToken(response.data.refreshToken);
 
-    this.setAccessToken(response.token);
-    this.setRefreshToken(response.refreshToken);
-
-    return {
-      error: null,
-      isLogin: true
-    }
+  return {
+    error: null,
+    isLogin: true
   }
-
-  async refresh() {
-    const data = {
-      accessToken: this.getAccessToken(),
-      refreshToken: this.getRefreshToken(),
-    } as TokenApiModel;
-
-    const response = await ApiSingleton.authApi.apiAuthRefreshPost(data);
-
-    if (response.token == null) {
-      return {
-        error: "error",
-        isLogin: false
-      }
-    }
-    this.setAccessToken(response.token)
-    return {
-      error: null,
-      isLogin: true
-    }
-  }
-
-  isLoggedIn() {
-    const token = this.getAccessToken();
-    return !!token && !this.isTokenExpired(token);
-  }
-
-  isTokenExpired(token: any) {
-    try {
-      let decoded = decode(token);
-      return (decoded as any).exp + 300 < Date.now() / 1000;
-    } catch (err) {
-      return false;
-    }
-  }
-
-  setAccessToken = (idToken: string) => localStorage.setItem("accessToken", idToken);
-
-  setRefreshToken = (idToken: string) => localStorage.setItem("refreshToken", idToken);
-
-  getAccessToken = () => localStorage.getItem("accessToken");
-
-  getRefreshToken = () => localStorage.getItem("refreshToken");
-
-  async logout() {
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
-
-    await ApiSingleton.authApi.apiAuthRevokePost();
-  };
-
-  getProfile = () => {
-    const token = this.getAccessToken();
-
-    return token === null ? null : decode<TokenPayload>(token);
-  };
-
-  getUserId = () => this.getProfile()?._id;
-
-  getUserName = () => this.getProfile()?._name;
-
-  loggedIn = () => this.getAccessToken() !== null
 }
+
+const refresh = async () => {
+  const data = {
+    accessToken: getAccessToken(),
+    refreshToken: getRefreshToken(),
+  } as TokenApiModel;
+
+  const response = await axios.post<AuthenticatedResponse>(basePath + "/api/Auth/refresh", data);
+
+  if (response.data.token == null) {
+    return {
+      error: "error",
+      isLogin: false
+    }
+  }
+  setAccessToken(response.data.token)
+  return {
+    error: null,
+    isLogin: true
+  }
+}
+
+const revoke = async () => {
+  await axios.post(
+    basePath + "/api/Auth/revoke",
+    {
+      headers: {Authorization: `Bearer ${AuthService.getAccessToken()}`}
+    }
+  );
+}
+
+const isLoggedIn = async () => {
+  const token = getAccessToken();
+  return !!token && !await isTokenExpired(token);
+}
+
+const isTokenExpired = async (token: any) => {
+  try {
+    let decoded = decode(token);
+    return (decoded as any).exp + 300 < Date.now() / 1000;
+  } catch (err) {
+    return false;
+  }
+}
+
+const setAccessToken = (idToken: string) => localStorage.setItem("accessToken", idToken);
+
+const setRefreshToken = (idToken: string) => localStorage.setItem("refreshToken", idToken);
+
+const getAccessToken = () => localStorage.getItem("accessToken");
+
+const getRefreshToken = () => localStorage.getItem("refreshToken");
+
+const logout = async () => {
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
+
+  await revoke();
+};
+
+const getProfile = () => {
+  const token = getAccessToken();
+
+  return token === null ? null : decode<TokenPayload>(token);
+};
+
+const getUserId = () => getProfile()?._id;
+
+const getUserName = () => getProfile()?._name;
+
+const loggedIn = () => getAccessToken() !== null
+
+const AuthService = {
+  login,
+  register,
+  logout,
+  getProfile,
+  isLoggedIn,
+  getUserName,
+  getAccessToken
+};
+
+export default AuthService;

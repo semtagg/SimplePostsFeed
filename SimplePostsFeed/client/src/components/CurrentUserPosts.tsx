@@ -1,8 +1,8 @@
 import React, {useCallback, useEffect, useState} from "react";
-import ApiSingleton from "../api/ApiSingleton";
-import {PostViewModel} from "../api";
 import {useParams} from "react-router";
 import {useNavigate} from "react-router-dom";
+import PostService from "../services/PostService";
+import {PostViewModel} from "../models/Models";
 
 const CurrentUserPosts = () => {
   const [currentUserPosts, setCurrentUserPosts] = useState<PostViewModel[]>([]);
@@ -10,7 +10,7 @@ const CurrentUserPosts = () => {
   const navigate = useNavigate();
 
   const fetchData = useCallback(async () => {
-    const data = await ApiSingleton.postApi.apiPostGetCurrentUserPostsGet();
+    const data = await PostService.getPostByUserId();
     setCurrentUserPosts(data);
   }, []);
 
@@ -22,7 +22,7 @@ const CurrentUserPosts = () => {
 
   const deletePost = async (postId: number) => {
     try {
-      await ApiSingleton.postApi.apiPostRemovePostIdDelete(postId);
+      await PostService.deletePost(postId);
       window.location.reload();
     } catch (e) {
       console.log(e)

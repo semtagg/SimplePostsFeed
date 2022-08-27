@@ -1,8 +1,8 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router";
-import ApiSingleton from "../api/ApiSingleton";
 import {SubmitHandler, useForm} from "react-hook-form";
-import {AccountViewModel} from "../api";
+import AuthService from "../services/AuthService";
+import {AccountViewModel} from "../models/Models";
 
 const defaultValues: AccountViewModel = {
   userName: "",
@@ -16,12 +16,11 @@ const Login = () => {
 
   const onSubmit: SubmitHandler<AccountViewModel> = async (user) => {
     try {
-      await ApiSingleton.authService.login(user);
+      await AuthService.login(user);
 
       navigate("/");
       window.location.reload();
     } catch (err) {
-      /*setError(err)*/
       console.log(err)
     }
   };
