@@ -1,5 +1,3 @@
-using System;
-
 namespace SimplePostsFeed.Models
 {
     public class AccountViewModel

@@ -16,7 +16,7 @@ namespace SimplePostsFeed.Services
             var timeNow = DateTime.UtcNow;
             var signinCredentials = new SigningCredentials(secretKey, SecurityAlgorithms.HmacSha256);
             var tokeOptions = new JwtSecurityToken(
-                issuer: "SimplePostsFeed",
+                "SimplePostsFeed",
                 claims: claims,
                 notBefore: timeNow,
                 expires: timeNow.AddMinutes(120),
@@ -36,7 +36,7 @@ namespace SimplePostsFeed.Services
             }
         }
 
-        public ClaimsPrincipal  GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {

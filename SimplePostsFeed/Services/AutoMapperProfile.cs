@@ -13,5 +13,4 @@ namespace SimplePostsFeed.Services
             CreateMap<AccountViewModel, AccountViewModelDto>().ReverseMap();
         }
     }
-
 }

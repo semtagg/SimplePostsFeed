@@ -5,12 +5,12 @@ namespace SimplePostsFeed.Repository
 {
     public sealed class AppContext : DbContext
     {
-        public AppContext (DbContextOptions<AppContext> options)
+        public AppContext(DbContextOptions<AppContext> options)
             : base(options)
         {
             Database.EnsureCreated();
         }
-        
+
         public DbSet<PostViewModelDto> Posts { get; set; }
         public DbSet<AccountViewModelDto> Accounts { get; set; }
 

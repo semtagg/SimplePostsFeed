@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -14,7 +13,6 @@ using Microsoft.OpenApi.Models;
 using SimplePostsFeed.Repository;
 using SimplePostsFeed.Services;
 using AppContext = SimplePostsFeed.Repository.AppContext;
-using Swashbuckle.AspNetCore.Swagger;
 
 namespace SimplePostsFeed
 {
@@ -45,14 +43,18 @@ namespace SimplePostsFeed
                     Scheme = "Bearer"
                 });
 
-                c.AddSecurityRequirement(new OpenApiSecurityRequirement{ 
+                c.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
                     {
-                        new OpenApiSecurityScheme{
-                            Reference = new OpenApiReference{
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
+                            {
                                 Id = "Bearer", //The name of the previously defined security scheme.
                                 Type = ReferenceType.SecurityScheme
                             }
-                        },new List<string>()
+                        },
+                        new List<string>()
                     }
                 });
             });

@@ -10,4 +10,3 @@ namespace SimplePostsFeed.Services
         ClaimsPrincipal GetPrincipalFromExpiredToken(string token);
     }
 }
-

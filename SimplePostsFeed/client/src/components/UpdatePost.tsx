@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect} from "react";
 import {Button, Form} from "react-bootstrap";
 import {useNavigate, useParams} from "react-router";
 import {SubmitHandler, useForm} from "react-hook-form";
@@ -14,7 +14,7 @@ const defaultValues: UpdateViewModel = {
 const UpdatePost = () => {
   const {register, handleSubmit, setValue, getValues} = useForm<UpdateViewModel>({defaultValues});
   const navigate = useNavigate();
-  const {id}=useParams();
+  const {id} = useParams();
 
   const fetchData = useCallback(async () => {
     const data = await PostService.getPostById(Number(id));
@@ -54,7 +54,7 @@ const UpdatePost = () => {
                         {...register("title")}
           />
         </Form.Group>
-        <Form.Group className="mb-3"  controlId="exampleForm.ControlTextarea1">
+        <Form.Group className="mb-3" controlId="exampleForm.ControlTextarea1">
           <Form.Label>Body</Form.Label>
           <Form.Control as="textarea" rows={3} defaultValue={getValues("body")}
                         {...register("body")}

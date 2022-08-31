@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SimplePostsFeed.Extensions;
 using SimplePostsFeed.Models;
-using SimplePostsFeed.Models.DTO;
 using SimplePostsFeed.Repository;
 
 namespace SimplePostsFeed.Controllers
@@ -44,7 +41,7 @@ namespace SimplePostsFeed.Controllers
                 ? NotFound()
                 : Ok(result);
         }
-        
+
         [HttpGet("getPostById/{id}")]
         [ProducesResponseType(typeof(PostViewModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetPostById(int id)
@@ -74,7 +71,7 @@ namespace SimplePostsFeed.Controllers
 
             return Ok();
         }
-        
+
         [HttpPost("updatePost")]
         public async Task<IActionResult> UpdatePost(UpdateViewModel post)
         {

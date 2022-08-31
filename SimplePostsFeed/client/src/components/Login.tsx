@@ -62,8 +62,9 @@ const Login = () => {
                                             {loginState!.error}
                                         </p>
                                     )}*/}
-                  <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="/register"
-                                                                                        className="link-danger">Register</a>
+                  <p className="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a
+                    href="/register"
+                    className="link-danger">Register</a>
                   </p>
                 </div>
               </form>

@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SimplePostsFeed.Extensions;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
 using SimplePostsFeed.Repository;
-using SimplePostsFeed.Services;
 
 namespace SimplePostsFeed.Controllers
 {
@@ -29,10 +24,7 @@ namespace SimplePostsFeed.Controllers
         [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Register([FromBody] AccountViewModel registerModel)
         {
-            if (registerModel is null)
-            {
-                return BadRequest("Invalid client request");
-            }
+            if (registerModel is null) return BadRequest("Invalid client request");
 
             var result = await _appRepository.Register(registerModel);
 
@@ -45,10 +37,7 @@ namespace SimplePostsFeed.Controllers
         [ProducesResponseType(typeof(AuthenticatedResponse), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> Login([FromBody] AccountViewModel loginModel)
         {
-            if (loginModel is null)
-            {
-                return BadRequest("Invalid client request");
-            }
+            if (loginModel is null) return BadRequest("Invalid client request");
 
             var result = await _appRepository.Login(loginModel);
 

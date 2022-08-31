@@ -44,22 +44,26 @@ const Register = () => {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                           <div className="form-outline flex-fill mb-0">
-                            <input type="text" id="form3Example3" className="form-control form-control-lg"
+                            <input type="text" id="form3Example3"
+                                   className="form-control form-control-lg"
                                    placeholder="Enter a valid nickname"
                                    {...register("userName")}
                             />
-                            <label className="form-label" htmlFor="form3Example1c">Your Nickname</label>
+                            <label className="form-label" htmlFor="form3Example1c">Your
+                              Nickname</label>
                           </div>
                         </div>
 
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                           <div className="form-outline flex-fill mb-0">
-                            <input type="password" id="form3Example3" className="form-control form-control-lg"
+                            <input type="password" id="form3Example3"
+                                   className="form-control form-control-lg"
                                    placeholder="Enter a valid password"
                                    {...register("password")}
                             />
-                            <label className="form-label" htmlFor="form3Example1c">Your Nickname</label>
+                            <label className="form-label" htmlFor="form3Example1c">Your
+                              Nickname</label>
                           </div>
                         </div>
 
@@ -77,10 +81,12 @@ const Register = () => {
                       </form>
 
                     </div>
-                    <div className="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
+                    <div
+                      className="col-md-10 col-lg-6 col-xl-7 d-flex align-items-center order-1 order-lg-2">
 
-                      <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
-                           className="img-fluid" alt="Sample"/>
+                      <img
+                        src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-registration/draw1.webp"
+                        className="img-fluid" alt="Sample"/>
 
                     </div>
                   </div>

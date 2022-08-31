@@ -1,26 +1,24 @@
 ﻿using System;
-using BCryptNet = BCrypt.Net.BCrypt;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
-using Microsoft.AspNetCore.Localization;
 using Microsoft.EntityFrameworkCore;
 using SimplePostsFeed.Models;
 using SimplePostsFeed.Models.DTO;
 using SimplePostsFeed.Services;
+using BCryptNet = BCrypt.Net.BCrypt;
 
 namespace SimplePostsFeed.Repository
 {
     public class AppRepository : IAppRepository
     {
         private readonly AppContext _context;
-        private readonly ITokenService _tokenService;
         private readonly IMapper _mapper;
+        private readonly ITokenService _tokenService;
 
         public AppRepository(AppContext context, ITokenService tokenService, IMapper mapper)
         {
@@ -34,11 +32,11 @@ namespace SimplePostsFeed.Repository
             if (await _context.Accounts.AnyAsync(x => x.UserName == registerModel.UserName))
                 return null;
 
-            var bytes = ASCIIEncoding.ASCII.GetBytes(registerModel.Password);
-            var user = new AccountViewModelDto()
+            var bytes = Encoding.ASCII.GetBytes(registerModel.Password);
+            var user = new AccountViewModelDto
             {
                 UserName = registerModel.UserName,
-                PasswordHash = new MD5CryptoServiceProvider().ComputeHash(bytes),
+                PasswordHash = new MD5CryptoServiceProvider().ComputeHash(bytes)
             };
 
             await _context.Accounts.AddAsync(user);
@@ -50,16 +48,16 @@ namespace SimplePostsFeed.Repository
         public async Task<AuthenticatedResponse> Login(AccountViewModel loginModel)
         {
             var user = await _context.Accounts.FirstOrDefaultAsync(u =>
-                (u.UserName == loginModel.UserName) && (u.PasswordHash.SequenceEqual(new MD5CryptoServiceProvider()
-                    .ComputeHash(ASCIIEncoding.ASCII.GetBytes(loginModel.Password)))));
+                u.UserName == loginModel.UserName && u.PasswordHash.SequenceEqual(new MD5CryptoServiceProvider()
+                    .ComputeHash(Encoding.ASCII.GetBytes(loginModel.Password))));
 
             if (user is null)
                 return null;
 
             var claims = new List<Claim>
             {
-                new Claim("_id", user.Id.ToString()),
-                new Claim("_userName", loginModel.UserName)
+                new("_id", user.Id.ToString()),
+                new("_userName", loginModel.UserName)
             };
 
             var accessToken = _tokenService.GenerateAccessToken(claims);
@@ -77,8 +75,8 @@ namespace SimplePostsFeed.Repository
 
         public async Task<AuthenticatedResponse> Refresh(TokenApiModel tokenApiModel)
         {
-            string accessToken = tokenApiModel.AccessToken;
-            string refreshToken = tokenApiModel.RefreshToken;
+            var accessToken = tokenApiModel.AccessToken;
+            var refreshToken = tokenApiModel.RefreshToken;
 
             var principal = _tokenService.GetPrincipalFromExpiredToken(accessToken);
             var username = principal.Identity.Name; //this is mapped to the Name claim by default
@@ -94,7 +92,7 @@ namespace SimplePostsFeed.Repository
             user.RefreshToken = newRefreshToken;
             await _context.SaveChangesAsync();
 
-            return new AuthenticatedResponse()
+            return new AuthenticatedResponse
             {
                 Token = newAccessToken,
                 RefreshToken = newRefreshToken
@@ -115,7 +113,7 @@ namespace SimplePostsFeed.Repository
             var users = await _context.Accounts.ToArrayAsync();
             var data = await _context.Posts.ToArrayAsync();
 
-            return data.Select(d => new PostViewModel()
+            return data.Select(d => new PostViewModel
             {
                 Id = d.Id,
                 Title = d.Title,
@@ -134,7 +132,7 @@ namespace SimplePostsFeed.Repository
                 .Where(p => p.UserId == userId)
                 .ToArrayAsync();
 
-            return data.Select(d => new PostViewModel()
+            return data.Select(d => new PostViewModel
             {
                 Id = d.Id,
                 Title = d.Title,
@@ -146,7 +144,7 @@ namespace SimplePostsFeed.Repository
         public async Task<PostViewModel> GetPostById(int id, string token)
         {
             var userId = int.Parse(GetUserIdFromToken(token));
-            var post = await _context.Posts.FirstOrDefaultAsync(p=>p.Id == id && p.UserId == userId);
+            var post = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id && p.UserId == userId);
 
             return _mapper.Map<PostViewModel>(post);
         }
@@ -163,14 +161,14 @@ namespace SimplePostsFeed.Repository
         public async Task UpdatePost(UpdateViewModel post, string token)
         {
             var userId = int.Parse(GetUserIdFromToken(token));
-            var data = new PostViewModelDto()
+            var data = new PostViewModelDto
             {
                 Id = post.Id,
                 Title = post.Title,
                 Body = post.Body,
                 UserId = userId
             };
-            
+
             _context.Posts.Update(data);
             await _context.SaveChangesAsync();
         }
@@ -179,7 +177,7 @@ namespace SimplePostsFeed.Repository
         {
             var item = await _context.Posts.FirstOrDefaultAsync(p => p.Id == id);
             var userId = int.Parse(GetUserIdFromToken(token));
-            
+
             if (item != null && item.UserId == userId)
             {
                 _context.Posts.Remove(item);
@@ -190,6 +188,8 @@ namespace SimplePostsFeed.Repository
         }
 
         private string GetUserIdFromToken(string token)
-            => _tokenService.GetPrincipalFromExpiredToken(token[7..]).Claims.ToArray()[0].Value;
+        {
+            return _tokenService.GetPrincipalFromExpiredToken(token[7..]).Claims.ToArray()[0].Value;
+        }
     }
 }
